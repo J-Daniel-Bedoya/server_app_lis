@@ -1,4 +1,5 @@
-const { db } = require('../utils/db');
+const { sequelize } = require('../utils/db');
+const { Installation, Area, Fiber, Nap, User, Evidence } = require('../models');
 const { validateIPAddress, validateMACAddress } = require('../utils/validators');
 
 class InstallationsService {
@@ -28,9 +29,9 @@ class InstallationsService {
 
     // Verificar existencia de relaciones
     const [area, fiber, nap] = await Promise.all([
-      db.areas.findByPk(areaId),
-      db.fiber.findByPk(fiberId),
-      db.naps.findByPk(napId)
+      Area.findByPk(areaId),
+      Fiber.findByPk(fiberId),
+      Nap.findByPk(napId)
     ]);
 
     if (!area) throw new Error('Área no encontrada');
@@ -43,7 +44,7 @@ class InstallationsService {
     }
 
     // Crear la instalación
-    const installation = await db.installations.create({
+    const installation = await Installation.create({
       areaId,
       fiberId,
       napId,
@@ -59,7 +60,7 @@ class InstallationsService {
 
     // Crear registros de evidencia
     if (evidenceUrls && evidenceUrls.length > 0) {
-      await db.evidence.bulkCreate(
+      await Evidence.bulkCreate(
         evidenceUrls.map(url => ({
           installationId: installation.id,
           imageUrl: url,
@@ -77,30 +78,41 @@ class InstallationsService {
   }
 
   async getPendingInstallations() {
-    return db.installations.findAll({
+    return Installation.findAll({
       where: { status: 'pending' },
       include: [
-        { model: db.areas, attributes: ['name'] },
-        { model: db.users, as: 'technician', attributes: ['name'] }
+        { model: Area, attributes: ['name'] },
+        { model: Fiber, attributes: ['name', 'type'] },
+        { model: Nap, attributes: ['name', 'location'] },
+        { 
+          model: User,
+          as: 'technician',
+          attributes: ['name']
+        }
       ],
       order: [['createdAt', 'DESC']]
     });
   }
 
   async getInstallationById(id) {
-    return db.installations.findByPk(id, {
+    return Installation.findByPk(id, {
       include: [
-        { model: db.areas, attributes: ['name'] },
-        { model: db.fiber, attributes: ['name', 'type'] },
-        { model: db.naps, attributes: ['name', 'location'] },
-        { model: db.users, as: 'technician', attributes: ['name'] },
-        { model: db.evidence }
+        { model: Area, attributes: ['name'] },
+        { model: Fiber, attributes: ['name', 'type'] },
+        { model: Nap, attributes: ['name', 'location'] },
+        { 
+          model: User,
+          as: 'technician',
+          attributes: ['name']
+        },
+        { model: Evidence }
       ]
     });
   }
 
   async updateInstallationStatus(id, status, technicianId) {
-    const installation = await db.installations.findByPk(id);
+    const installation = await Installation.findByPk(id);
+    
     if (!installation) {
       throw new Error('Instalación no encontrada');
     }

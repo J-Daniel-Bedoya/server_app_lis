@@ -1,4 +1,5 @@
-const { db } = require('../utils/db');
+const { sequelize } = require('../utils/db');
+const { Inspection, Installation, User, Evidence } = require('../models');
 
 class InspectionsService {
   async createInspection(inspectionData) {
@@ -15,13 +16,13 @@ class InspectionsService {
     } = inspectionData;
 
     // Verificar que la instalación existe
-    const installation = await db.installations.findByPk(installationId);
+    const installation = await Installation.findByPk(installationId);
     if (!installation) {
       throw new Error('Instalación no encontrada');
     }
 
     // Crear la revisión
-    const inspection = await db.inspections.create({
+    const inspection = await Inspection.create({
       installationId,
       technicianId,
       status,
@@ -35,11 +36,12 @@ class InspectionsService {
 
     // Crear registros de evidencia si se proporcionaron
     if (evidenceUrls && evidenceUrls.length > 0) {
-      await db.evidence.bulkCreate(
+      await Evidence.bulkCreate(
         evidenceUrls.map(url => ({
           inspectionId: inspection.id,
           imageUrl: url,
-          uploadedBy: technicianId
+          uploadedBy: technicianId,
+          type: 'inspection'
         }))
       );
     }
@@ -48,79 +50,74 @@ class InspectionsService {
   }
 
   async getRecentInspections(limit = 10) {
-    return db.inspections.findAll({
-      include: [
-        {
-          model: db.installations,
-          as: 'installation',
-          include: [
-            { model: db.areas, attributes: ['name'] }
-          ]
-        },
-        {
-          model: db.users,
-          as: 'technician',
-          attributes: ['name']
-        },
-        {
-          model: db.evidence,
-          as: 'evidence'
-        }
-      ],
+    return Inspection.findAll({
+      limit,
       order: [['inspectionDate', 'DESC']],
-      limit
+      include: [
+        { 
+          model: Installation,
+          attributes: ['id', 'clientName', 'ipAddress']
+        },
+        {
+          model: User,
+          as: 'inspector',
+          attributes: ['id', 'name']
+        },
+        {
+          model: Evidence,
+          attributes: ['id', 'imageUrl']
+        }
+      ]
     });
   }
 
   async getInspectionById(id) {
-    return db.inspections.findByPk(id, {
+    return Inspection.findByPk(id, {
       include: [
-        {
-          model: db.installations,
-          as: 'installation',
-          include: [
-            { model: db.areas, attributes: ['name'] },
-            { model: db.naps, attributes: ['name'] }
-          ]
+        { 
+          model: Installation,
+          attributes: ['id', 'clientName', 'ipAddress']
         },
         {
-          model: db.users,
-          as: 'technician',
-          attributes: ['name']
+          model: User,
+          as: 'inspector',
+          attributes: ['id', 'name']
         },
         {
-          model: db.evidence,
-          as: 'evidence'
+          model: Evidence,
+          attributes: ['id', 'imageUrl']
         }
       ]
     });
   }
 
   async getInspectionsByInstallation(installationId) {
-    return db.inspections.findAll({
+    return Inspection.findAll({
       where: { installationId },
+      order: [['inspectionDate', 'DESC']],
       include: [
         {
-          model: db.users,
-          as: 'technician',
-          attributes: ['name']
+          model: User,
+          as: 'inspector',
+          attributes: ['id', 'name']
         },
         {
-          model: db.evidence,
-          as: 'evidence'
+          model: Evidence,
+          attributes: ['id', 'imageUrl']
         }
-      ],
-      order: [['inspectionDate', 'DESC']]
+      ]
     });
   }
 
-  async updateInspection(id, updateData) {
-    const inspection = await db.inspections.findByPk(id);
+  async updateInspectionStatus(id, status) {
+    const inspection = await Inspection.findByPk(id);
+    
     if (!inspection) {
       throw new Error('Revisión no encontrada');
     }
 
-    return inspection.update(updateData);
+    await inspection.update({ status });
+    return inspection;
   }
 }
 

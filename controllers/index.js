@@ -46,13 +46,6 @@ const {
   deleteFiber,
 } = require("./fiber.controller");
 
-const {
-  getAllClients,
-  getClientById,
-  createClient,
-  updateClient,
-  deleteClient,
-} = require("./clients.controller");
 
 const {
   getAllEvidence,
@@ -111,13 +104,6 @@ module.exports = {
     createFiber,
     updateFiber,
     deleteFiber,
-  },
-  clientController: {
-    getAllClients,
-    getClientById,
-    createClient,
-    updateClient,
-    deleteClient,
   },
   evidenceController: {
     getAllEvidence,

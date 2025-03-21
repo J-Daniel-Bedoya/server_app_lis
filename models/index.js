@@ -6,7 +6,8 @@ const Sector = require('./sectors.models');
 const Nap = require('./naps.models');
 const Evidence = require('./evidence.models');
 const EvidenceImage = require('./evidence_images.models');
-const Installation = require('./installations.model');
+const Installation = require('./installations.models');
+const Inspection = require('./inspections.models');
 
 const models = {
   User,
@@ -17,7 +18,8 @@ const models = {
   Nap,
   Evidence,
   EvidenceImage,
-  Installation
+  Installation,
+  Inspection
 };
 
 // Inicializar asociaciones
