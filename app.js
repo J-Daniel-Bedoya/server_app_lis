@@ -86,7 +86,7 @@ const startServer = async () => {
     // Iniciar servidor
     app.listen(PORT, HOST, () => {
       console.log(`Server is running on port ${PORT}`);
-      console.log(`API Documentation available at http://${HOST}/api-docs`);
+      // console.log(`API Documentation available at http://$/api-docs`);
     });
   } catch (error) {
     console.error("Unable to start server:", error);
