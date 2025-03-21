@@ -14,8 +14,8 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:5000',
-        description: 'Servidor de desarrollo'
+        url: 'https://serverapplis-production.up.railway.app/api/v1',
+        description: 'Servidor de producción'
       }
     ],
     components: {
