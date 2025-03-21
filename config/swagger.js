@@ -14,7 +14,7 @@ const options = {
     },
     servers: [
       {
-        url: 'https://serverapplis-production.up.railway.app/api/v1',
+        url: 'https://serverapplis-production.up.railway.app',
         description: 'Servidor de producción'
       }
     ],
