@@ -10,41 +10,35 @@ const Installation = require('./installations.models');
 const Inspection = require('./inspections.models');
 
 const initModels = (sequelize) => {
-  // Relaciones de Area
+  // 1. Jerarquía de Infraestructura
+  // 1.1 Área (Nivel superior)
   Area.hasMany(Tower, { foreignKey: 'area_id' });
   Area.hasMany(Fiber, { foreignKey: 'area_id' });
   Area.hasMany(Installation, { foreignKey: 'area_id' });
 
-  // Relaciones de Torre
+  // 1.2 Torre
   Tower.belongsTo(Area, { foreignKey: 'area_id' });
   Tower.hasMany(Sector, { foreignKey: 'tower_id' });
 
-  // Relaciones de Sector
+  // 1.3 Sector
   Sector.belongsTo(Tower, { foreignKey: 'tower_id' });
   Sector.hasMany(Installation, { foreignKey: 'sector_id' });
 
-  // Relaciones de Fibra
+  // 1.4 Fibra
   Fiber.belongsTo(Area, { foreignKey: 'area_id' });
   Fiber.hasMany(Nap, { foreignKey: 'fiber_id' });
   Fiber.hasMany(Installation, { foreignKey: 'fiber_id' });
 
-  // Relaciones de NAP
+  // 1.5 NAP
   Nap.belongsTo(Fiber, { foreignKey: 'fiber_id' });
   Nap.hasMany(Installation, { foreignKey: 'nap_id' });
 
-  // Relaciones de Installation
-  Installation.belongsTo(Area, {
-    foreignKey: 'area_id'
-  });
-  Installation.belongsTo(Fiber, {
-    foreignKey: 'fiber_id'
-  });
-  Installation.belongsTo(Nap, {
-    foreignKey: 'nap_id'
-  });
-  Installation.belongsTo(Sector, {
-    foreignKey: 'sector_id'
-  });
+  // 2. Instalaciones y sus relaciones
+  // 2.1 Instalación (Centro del sistema)
+  Installation.belongsTo(Area, { foreignKey: 'area_id' });
+  Installation.belongsTo(Sector, { foreignKey: 'sector_id' });
+  Installation.belongsTo(Fiber, { foreignKey: 'fiber_id' });
+  Installation.belongsTo(Nap, { foreignKey: 'nap_id' });
   Installation.belongsTo(User, {
     foreignKey: 'technician_id',
     as: 'technician'
@@ -58,12 +52,12 @@ const initModels = (sequelize) => {
     as: 'inspections'
   });
 
-  // Relaciones de Inspection
-  Inspection.belongsTo(Installation, { 
+  // 2.2 Inspección
+  Inspection.belongsTo(Installation, {
     foreignKey: 'installation_id',
     as: 'installation'
   });
-  Inspection.belongsTo(User, { 
+  Inspection.belongsTo(User, {
     foreignKey: 'technician_id',
     as: 'inspector'
   });
@@ -72,7 +66,8 @@ const initModels = (sequelize) => {
     as: 'evidence'
   });
 
-  // Relaciones de Evidence
+  // 3. Sistema de Evidencias
+  // 3.1 Evidencia
   Evidence.belongsTo(Installation, {
     foreignKey: 'installation_id',
     as: 'installation'
@@ -90,7 +85,7 @@ const initModels = (sequelize) => {
     as: 'images'
   });
 
-  // Relaciones de EvidenceImage
+  // 3.2 Imágenes de Evidencia
   EvidenceImage.belongsTo(Evidence, {
     foreignKey: 'evidence_id',
     as: 'evidence'
@@ -100,7 +95,8 @@ const initModels = (sequelize) => {
     as: 'uploader'
   });
 
-  // Relaciones de Usuario
+  // 4. Relaciones de Usuario
+  // 4.1 Usuario con sus roles
   User.hasMany(Installation, {
     as: 'assignedInstallations',
     foreignKey: 'technician_id'
