@@ -7,6 +7,7 @@ const napRoutes = require("./naps.routes");
 const evidenceRoutes = require("./evidence.routes");
 const authRoutes = require("./auth.routes");
 const installationRoutes = require("./installations.routes");
+const inspectionRoutes = require("./inspections.routes");
 
 module.exports = {
   userRoutes,
@@ -18,4 +19,5 @@ module.exports = {
   evidenceRoutes,
   authRoutes,
   installationRoutes,
+  inspectionRoutes,
 };

@@ -1,127 +1,137 @@
-const { Evidence, EvidenceImage, Client } = require('../models');
+const { db } = require('../utils/db');
+const sharp = require('sharp');
+const { uploadToStorage } = require('../utils/storage');
 
 class EvidenceService {
-  async getAllEvidence() {
-    return Evidence.findAll({
-      include: [
-        { model: Client, attributes: ['id', 'name'] },
-        { model: EvidenceImage, attributes: ['id', 'image_url'] }
-      ]
+  async createEvidence(evidenceData, imageFile) {
+    const {
+      installationId,
+      inspectionId,
+      type,
+      description,
+      uploadedBy,
+      metadata
+    } = evidenceData;
+
+    // Validar el tipo de evidencia
+    if (!this.validateEvidenceType(type)) {
+      throw new Error('Tipo de evidencia inválido');
+    }
+
+    // Procesar la imagen y crear thumbnail
+    const { imageUrl, thumbnailUrl } = await this.processAndUploadImage(imageFile);
+
+    // Crear el registro de evidencia
+    const evidence = await db.evidence.create({
+      installationId,
+      inspectionId,
+      type,
+      imageUrl,
+      thumbnailUrl,
+      uploadedBy,
+      description,
+      metadata: {
+        ...metadata,
+        originalName: imageFile.originalname,
+        timestamp: new Date().toISOString(),
+      }
     });
-  }
 
-  async getEvidenceById(id) {
-    const evidence = await Evidence.findByPk(id, {
-      include: [
-        { model: Client, attributes: ['id', 'name'] },
-        { model: EvidenceImage, attributes: ['id', 'image_url'] }
-      ]
-    });
-    if (!evidence) {
-      throw new Error('Evidence not found');
-    }
-    return evidence;
-  }
-
-  async createEvidence(evidenceData) {
-    // Verificar que el cliente existe
-    const client = await Client.findByPk(evidenceData.client_id);
-    if (!client) {
-      throw new Error('Client not found');
-    }
-
-    // Crear la evidencia
-    const evidence = await Evidence.create(evidenceData);
-
-    // Si hay imágenes, crearlas
-    if (evidenceData.images && Array.isArray(evidenceData.images)) {
-      const imagePromises = evidenceData.images.map(imageUrl => 
-        EvidenceImage.create({
-          evidence_id: evidence.id,
-          image_url: imageUrl
-        })
-      );
-      await Promise.all(imagePromises);
-    }
-
-    // Retornar la evidencia con sus imágenes
     return this.getEvidenceById(evidence.id);
   }
 
-  async updateEvidence(id, evidenceData) {
-    const evidence = await Evidence.findByPk(id);
-    if (!evidence) {
-      throw new Error('Evidence not found');
-    }
+  async getEvidenceById(id) {
+    return db.evidence.findByPk(id, {
+      include: [
+        {
+          model: db.installations,
+          as: 'installation',
+          attributes: ['id', 'address']
+        },
+        {
+          model: db.inspections,
+          as: 'inspection'
+        },
+        {
+          model: db.users,
+          as: 'technician',
+          attributes: ['id', 'name']
+        }
+      ]
+    });
+  }
 
-    // Si se está actualizando el cliente, verificar que existe
-    if (evidenceData.client_id) {
-      const client = await Client.findByPk(evidenceData.client_id);
-      if (!client) {
-        throw new Error('Client not found');
-      }
-    }
+  async getEvidenceByInstallation(installationId) {
+    return db.evidence.findAll({
+      where: { installationId },
+      include: [
+        {
+          model: db.users,
+          as: 'technician',
+          attributes: ['id', 'name']
+        }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
+  }
 
-    // Actualizar la evidencia
-    await evidence.update(evidenceData);
-
-    // Si hay imágenes nuevas, agregarlas
-    if (evidenceData.images && Array.isArray(evidenceData.images)) {
-      const imagePromises = evidenceData.images.map(imageUrl => 
-        EvidenceImage.create({
-          evidence_id: evidence.id,
-          image_url: imageUrl
-        })
-      );
-      await Promise.all(imagePromises);
-    }
-
-    // Retornar la evidencia actualizada con sus imágenes
-    return this.getEvidenceById(id);
+  async getEvidenceByInspection(inspectionId) {
+    return db.evidence.findAll({
+      where: { inspectionId },
+      include: [
+        {
+          model: db.users,
+          as: 'technician',
+          attributes: ['id', 'name']
+        }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
   }
 
   async deleteEvidence(id) {
-    const evidence = await Evidence.findByPk(id);
+    const evidence = await db.evidence.findByPk(id);
     if (!evidence) {
-      throw new Error('Evidence not found');
+      throw new Error('Evidencia no encontrada');
     }
 
-    // Eliminar las imágenes asociadas
-    await EvidenceImage.destroy({
-      where: { evidence_id: id }
-    });
-
-    // Eliminar la evidencia
+    // Aquí deberíamos eliminar también las imágenes del storage
+    // TODO: Implementar deleteFromStorage(evidence.imageUrl)
+    
     await evidence.destroy();
   }
 
-  async addImageToEvidence(evidenceId, imageUrl) {
-    const evidence = await Evidence.findByPk(evidenceId);
-    if (!evidence) {
-      throw new Error('Evidence not found');
-    }
-
-    const image = await EvidenceImage.create({
-      evidence_id: evidenceId,
-      image_url: imageUrl
-    });
-
-    return image;
+  // Helpers
+  validateEvidenceType(type) {
+    const validTypes = [
+      'antenna_installation',
+      'onu_installation',
+      'signal_power',
+      'modem',
+      'device_serial',
+      'speed_test',
+      'other'
+    ];
+    return validTypes.includes(type);
   }
 
-  async removeImageFromEvidence(evidenceId, imageId) {
-    const image = await EvidenceImage.findOne({
-      where: {
-        id: imageId,
-        evidence_id: evidenceId
-      }
-    });
+  async processAndUploadImage(imageFile) {
+    // Procesar imagen original
+    const processedImage = await sharp(imageFile.buffer)
+      .jpeg({ quality: 80 })
+      .toBuffer();
 
-    if (!image) {
-      throw new Error('Image not found');
-    }
+    // Crear thumbnail
+    const thumbnail = await sharp(imageFile.buffer)
+      .resize(300, 300, { fit: 'inside' })
+      .jpeg({ quality: 60 })
+      .toBuffer();
 
-    await image.destroy();
+    // Subir ambas imágenes al storage
+    const imageUrl = await uploadToStorage(processedImage, 'evidence');
+    const thumbnailUrl = await uploadToStorage(thumbnail, 'thumbnails');
+
+    return { imageUrl, thumbnailUrl };
   }
 }
 

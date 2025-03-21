@@ -17,6 +17,7 @@ const {
   evidenceRoutes,
   authRoutes,
   installationRoutes,
+  inspectionRoutes,
 } = require("./routes");
 
 const app = express();
@@ -52,6 +53,7 @@ app.use("/api/v1/fiber", fiberRoutes);
 app.use("/api/v1/naps", napRoutes);
 app.use("/api/v1/evidence", evidenceRoutes);
 app.use("/api/v1/installations", installationRoutes);
+app.use("/api/v1/inspections", inspectionRoutes);
 
 // Manejo de errores 404
 app.use((req, res) => {
