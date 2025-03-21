@@ -3,10 +3,11 @@ const Tower = require('./towers.models');
 const Sector = require('./sectors.models');
 const Fiber = require('./fiber.models');
 const Nap = require('./naps.models');
-const Client = require('./clients.models');
 const Evidence = require('./evidence.models');
 const EvidenceImage = require('./evidence_images.models');
 const User = require('./users.models');
+const Installation = require('./installations.models');
+const Inspection = require('./inspections.models');
 
 const initModels = () => {
   // Relaciones de Area
@@ -19,7 +20,7 @@ const initModels = () => {
   
   // Relaciones de Sector
   Sector.belongsTo(Tower, { foreignKey: 'tower_id' });
-  Sector.hasMany(Client, { foreignKey: 'sector_id' });
+  Sector.hasMany(Installation, { foreignKey: 'sector_id' });
   
   // Relaciones de Fibra
   Fiber.belongsTo(Area, { foreignKey: 'area_id' });
@@ -27,13 +28,14 @@ const initModels = () => {
   
   // Relaciones de NAP
   Nap.belongsTo(Fiber, { foreignKey: 'fiber_id' });
-  Nap.hasMany(Client, { foreignKey: 'nap_id' });
+  Nap.hasMany(Installation, { foreignKey: 'nap_id' });
   
-  // Relaciones de Cliente
-  Client.belongsTo(Sector, { foreignKey: 'sector_id' });
-  Client.belongsTo(Nap, { foreignKey: 'nap_id' });
-  Client.hasMany(Evidence, { foreignKey: 'client_id' });
-  Client.belongsTo(User, {
+  // Relaciones de Installation
+  Installation.belongsTo(Sector, { foreignKey: 'sector_id' });
+  Installation.belongsTo(Nap, { foreignKey: 'nap_id' });
+  Installation.hasMany(Evidence, { foreignKey: 'installation_id' });
+  Installation.hasMany(Inspection, { foreignKey: 'installation_id' });
+  Installation.belongsTo(User, {
     as: 'technician',
     foreignKey: 'technician_id',
     scope: {
@@ -41,14 +43,30 @@ const initModels = () => {
     }
   });
   
+  // Relaciones de Inspection
+  Inspection.belongsTo(Installation, { foreignKey: 'installation_id' });
+  Inspection.belongsTo(User, {
+    as: 'inspector',
+    foreignKey: 'inspector_id',
+    scope: {
+      role: 'technician'
+    }
+  });
+  Inspection.hasMany(Evidence, { foreignKey: 'inspection_id' });
+  
   // Relaciones de Usuario
-  User.hasMany(Client, {
-    as: 'assignedClients',
+  User.hasMany(Installation, {
+    as: 'assignedInstallations',
     foreignKey: 'technician_id'
+  });
+  User.hasMany(Inspection, {
+    as: 'performedInspections',
+    foreignKey: 'inspector_id'
   });
   
   // Relaciones de Evidencia
-  Evidence.belongsTo(Client, { foreignKey: 'client_id' });
+  Evidence.belongsTo(Installation, { foreignKey: 'installation_id' });
+  Evidence.belongsTo(Inspection, { foreignKey: 'inspection_id' });
   Evidence.hasMany(EvidenceImage, { foreignKey: 'evidence_id' });
   
   // Relaciones de Imágenes de Evidencia
