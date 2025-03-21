@@ -34,7 +34,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
 }));
 
 // Health check para Railway
-app.get("/health", (req, res) => {
+app.get("/", (req, res) => {
   res.status(200).json({ status: "healthy" });
 });
 
@@ -81,12 +81,13 @@ const startServer = async () => {
     console.log("Database synchronized successfully");
 
     // Configurar puerto y host
-    const PORT = process.env.PORT || 5000;
+    const PORT = process.env.PORT;
+    const HOST = process.env.HOST;
 
     // Iniciar servidor
-    app.listen(PORT, "0.0.0.0", () => {
+    app.listen(PORT, HOST, () => {
       console.log(`Server is running on port ${PORT}`);
-      console.log(`API Documentation available at http://localhost:${PORT}/api-docs`);
+      console.log(`API Documentation available at http://${HOST}:${PORT}/api-docs`);
     });
   } catch (error) {
     console.error("Unable to start server:", error);
