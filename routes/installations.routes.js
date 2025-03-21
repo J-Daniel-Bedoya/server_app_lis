@@ -1,12 +1,16 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const installationsController = require('../controllers/installations.controller');
-const authMiddleware = require('../middlewares/auth.middleware');
-const adminMiddleware = require('../middlewares/admin.middleware');
+const installationsController = require("../controllers/installations.controller");
+const authMiddleware = require("../middlewares/auth.middleware");
+const adminMiddleware = require("../middlewares/admin.middleware");
 
 // Rutas protegidas - requieren autenticación
 router.use(authMiddleware);
+router.post("/", installationsController.createInstallation);
+router.get("/pending", installationsController.getPendingInstallations);
+router.get("/:id", installationsController.getInstallationById);
 
+router.patch("/:id/status", installationsController.updateInstallationStatus);
 /**
  * @swagger
  * /api/v1/installations:
@@ -68,9 +72,6 @@ router.use(authMiddleware);
  *       500:
  *         description: Error del servidor
  */
-router.post('/', 
-  installationsController.createInstallation
-);
 
 /**
  * @swagger
@@ -94,9 +95,6 @@ router.post('/',
  *       500:
  *         description: Error del servidor
  */
-router.get('/pending', 
-  installationsController.getPendingInstallations
-);
 
 /**
  * @swagger
@@ -127,9 +125,6 @@ router.get('/pending',
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id', 
-  installationsController.getInstallationById
-);
 
 /**
  * @swagger
@@ -177,8 +172,5 @@ router.get('/:id',
  *       500:
  *         description: Error del servidor
  */
-router.patch('/:id/status', 
-  installationsController.updateInstallationStatus
-);
 
 module.exports = router;

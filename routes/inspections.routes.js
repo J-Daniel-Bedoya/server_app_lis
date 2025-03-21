@@ -1,10 +1,17 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const inspectionsController = require('../controllers/inspections.controller');
-const authMiddleware = require('../middlewares/auth.middleware');
+const inspectionsController = require("../controllers/inspections.controller");
+const authMiddleware = require("../middlewares/auth.middleware");
 
 // Rutas protegidas - requieren autenticación
 router.use(authMiddleware);
+
+// Definir rutas primero
+router.post("/", inspectionsController.createInspection);
+router.get("/recent", inspectionsController.getRecentInspections);
+router.get("/:id", inspectionsController.getInspectionById);
+router.get("/installation/:installationId", inspectionsController.getInspectionsByInstallation);
+router.patch("/:id", inspectionsController.updateInspection);
 
 /**
  * @swagger
@@ -62,7 +69,6 @@ router.use(authMiddleware);
  *       500:
  *         description: Error del servidor
  */
-router.post('/', inspectionsController.createInspection);
 
 /**
  * @swagger
@@ -72,6 +78,13 @@ router.post('/', inspectionsController.createInspection);
  *     tags: [Inspections]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Número máximo de inspecciones a retornar
  *     responses:
  *       200:
  *         description: Lista de inspecciones recientes
@@ -86,7 +99,6 @@ router.post('/', inspectionsController.createInspection);
  *       500:
  *         description: Error del servidor
  */
-router.get('/recent', inspectionsController.getRecentInspections);
 
 /**
  * @swagger
@@ -117,7 +129,6 @@ router.get('/recent', inspectionsController.getRecentInspections);
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id', inspectionsController.getInspectionById);
 
 /**
  * @swagger
@@ -150,7 +161,6 @@ router.get('/:id', inspectionsController.getInspectionById);
  *       500:
  *         description: Error del servidor
  */
-router.get('/installation/:installationId', inspectionsController.getInspectionsByInstallation);
 
 /**
  * @swagger
@@ -203,6 +213,5 @@ router.get('/installation/:installationId', inspectionsController.getInspections
  *       500:
  *         description: Error del servidor
  */
-router.patch('/:id', inspectionsController.updateInspection);
 
 module.exports = router;
