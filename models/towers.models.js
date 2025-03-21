@@ -13,6 +13,10 @@ const Tower = sequelize.define(
       type: DataTypes.STRING(50),
       allowNull: false,
     },
+    description: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
     ip: {
       type: DataTypes.STRING(15),
       allowNull: false,
