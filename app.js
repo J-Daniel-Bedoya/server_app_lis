@@ -54,7 +54,7 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
     message: "Internal server error",
-    error: process.env.NODE_ENV === "development" ? err.message : undefined,
+    error: err.message,
   });
 });
 
@@ -67,11 +67,10 @@ async function startServer() {
 
     // Configurar puerto y host
     const PORT = process.env.PORT || 5000;
-    const HOST = process.env.DB_HOST;
 
     // Iniciar servidor
-    app.listen(PORT, HOST, () => {
-      console.log(`Server running on http://${HOST}:${PORT}`);
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
     });
   } catch (error) {
     console.error("Unable to start server:", error);
