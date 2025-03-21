@@ -14,9 +14,9 @@ const {
   sectorRoutes,
   fiberRoutes,
   napRoutes,
-  clientRoutes,
   evidenceRoutes,
   authRoutes,
+  installationRoutes,
 } = require("./routes");
 
 const app = express();
@@ -50,8 +50,8 @@ app.use("/api/v1/towers", towerRoutes);
 app.use("/api/v1/sectors", sectorRoutes);
 app.use("/api/v1/fiber", fiberRoutes);
 app.use("/api/v1/naps", napRoutes);
-app.use("/api/v1/clients", clientRoutes);
 app.use("/api/v1/evidence", evidenceRoutes);
+app.use("/api/v1/installations", installationRoutes);
 
 // Manejo de errores 404
 app.use((req, res) => {
