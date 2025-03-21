@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 const { sequelize } = require("./utils/db");
 const initModels = require("./models/initModels.models");
 
@@ -22,6 +24,13 @@ const app = express();
 // Middlewares globales
 app.use(cors());
 app.use(express.json());
+
+// Documentación Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: "API de Registro Técnico LIS",
+  customfavIcon: "/assets/favicon.ico"
+}));
 
 // Health check para Railway
 app.get("/health", (req, res) => {
@@ -59,24 +68,29 @@ app.use((err, req, res, next) => {
 });
 
 // Función para iniciar el servidor
-async function startServer() {
+const startServer = async () => {
   try {
+    // Inicializar la conexión a la base de datos
+    await sequelize.authenticate();
+    console.log("Database connection established successfully");
+
     // Sincronizar modelos con la base de datos
     await sequelize.sync({ alter: true });
-    console.log("Database synchronized");
+    console.log("Database synchronized successfully");
 
     // Configurar puerto y host
     const PORT = process.env.PORT || 5000;
 
     // Iniciar servidor
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`Server is running on port ${PORT}`);
+      console.log(`API Documentation available at http://localhost:${PORT}/api-docs`);
     });
   } catch (error) {
     console.error("Unable to start server:", error);
     process.exit(1);
   }
-}
+};
 
 // Iniciar servidor
 startServer();
