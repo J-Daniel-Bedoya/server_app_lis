@@ -16,6 +16,10 @@ const options = {
       {
         url: 'https://serverapplis-production.up.railway.app',
         description: 'Servidor de producción'
+      },
+      {
+        url: 'http://localhost:5000',
+        description: 'Servidor de desarrollo'
       }
     ],
     components: {
@@ -379,6 +383,125 @@ const options = {
             error: {
               type: 'string',
               example: 'Error details'
+            }
+          }
+        },
+        Installation: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              example: 1
+            },
+            areaId: {
+              type: 'integer',
+              example: 1
+            },
+            sectorId: {
+              type: 'integer',
+              example: 1
+            },
+            fiberId: {
+              type: 'integer',
+              example: 1
+            },
+            napId: {
+              type: 'integer',
+              example: 1
+            },
+            clientId: {
+              type: 'string',
+              example: 'CLI001'
+            },
+            clientName: {
+              type: 'string',
+              example: 'Juan Pérez'
+            },
+            phoneNumber: {
+              type: 'string',
+              example: '3001234567'
+            },
+            ipAddress: {
+              type: 'string',
+              example: '192.168.1.100'
+            },
+            macAddress: {
+              type: 'string',
+              example: '00:1A:2B:3C:4D:5E'
+            },
+            status: {
+              type: 'string',
+              enum: ['pending', 'inProgress', 'completed', 'cancelled'],
+              example: 'pending'
+            },
+            technicianId: {
+              type: 'integer',
+              example: 1
+            },
+            installationDate: {
+              type: 'string',
+              format: 'date-time'
+            },
+            completedAt: {
+              type: 'string',
+              format: 'date-time'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time'
+            }
+          }
+        },
+        Inspection: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              example: 1
+            },
+            installationId: {
+              type: 'integer',
+              example: 1
+            },
+            technicianId: {
+              type: 'integer',
+              example: 1
+            },
+            status: {
+              type: 'string',
+              enum: ['ok', 'issues', 'critical'],
+              example: 'ok'
+            },
+            inspectionDate: {
+              type: 'string',
+              format: 'date-time'
+            },
+            signalStrength: {
+              type: 'number',
+              format: 'float',
+              minimum: -100,
+              maximum: 0,
+              example: -65.5
+            },
+            observations: {
+              type: 'string',
+              example: 'La señal es estable pero podría mejorarse'
+            },
+            nextInspectionDate: {
+              type: 'string',
+              format: 'date-time'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time'
             }
           }
         }
