@@ -26,9 +26,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.PORT;
-const HOST = process.env.HOST_NAME;
-
 // Documentación Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   customCss: '.swagger-ui .topbar { display: none }',
@@ -38,7 +35,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
 
 // Health check para Railway
 app.get("/", (req, res) => {
-  res.status(200).json({ status: "healthy", documentation: `http://${HOST}/api-docs` });
+  res.status(200).json({ status: "healthy", documentation: `http://serverapplis-production.up.railway.app/api-docs` });
 });
 
 // Inicializar modelos y sus relaciones
@@ -83,10 +80,11 @@ const startServer = async () => {
     await sequelize.sync({ alter: true });
     console.log("Database synchronized successfully");
 
+    const PORT = process.env.PORT;
     // Iniciar servidor
-    app.listen(PORT, HOST, () => {
+    app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
-      // console.log(`API Documentation available at http://$/api-docs`);
+      console.log(`API Documentation available at http://serverapplis-production.up.railway.app/api-docs`);
     });
   } catch (error) {
     console.error("Unable to start server:", error);
