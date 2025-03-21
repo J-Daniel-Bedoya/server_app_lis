@@ -7,43 +7,30 @@ const Inspection = sequelize.define('inspections', {
     primaryKey: true,
     autoIncrement: true
   },
-  installation_id: {
+  installationId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: {
-      model: 'installations',
-      key: 'id'
-    }
+    field: 'installation_id'
   },
-  technician_id: {
+  technicianId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: {
-      model: 'users',
-      key: 'id'
-    }
+    field: 'technician_id'
   },
-  inspection_date: {
+  inspectionDate: {
     type: DataTypes.DATE,
     allowNull: false,
-    defaultValue: DataTypes.NOW
+    defaultValue: DataTypes.NOW,
+    field: 'inspection_date'
   },
   status: {
     type: DataTypes.ENUM('ok', 'issues', 'critical'),
     allowNull: false,
     defaultValue: 'ok'
   },
-  signal_strength: {
+  signalStrength: {
     type: DataTypes.FLOAT,
-    validate: {
-      min: -100,
-      max: 0
-    }
-  },
-  bandwidth: {
-    type: DataTypes.FLOAT,
-    comment: 'Velocidad medida en Mbps',
-    field: 'bandwidth'
+    field: 'signal_strength'
   },
   observations: {
     type: DataTypes.TEXT,
@@ -54,7 +41,7 @@ const Inspection = sequelize.define('inspections', {
     type: DataTypes.TEXT,
     field: 'recommendations'
   },
-  next_inspection_date: {
+  nextInspectionDate: {
     type: DataTypes.DATE,
     field: 'next_inspection_date'
   }
