@@ -31,6 +31,167 @@ const options = {
         }
       },
       schemas: {
+        Area: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              example: 1
+            },
+            name: {
+              type: 'string',
+              example: 'Zona Norte'
+            },
+            description: {
+              type: 'string',
+              example: 'Área que cubre el sector norte de la ciudad'
+            },
+            towers: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Tower'
+              }
+            },
+            fibers: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Fiber'
+              }
+            },
+            installations: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Installation'
+              }
+            }
+          }
+        },
+        Tower: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              example: 1
+            },
+            areaId: {
+              type: 'integer',
+              example: 1
+            },
+            name: {
+              type: 'string',
+              example: 'Torre Principal'
+            },
+            location: {
+              type: 'string',
+              example: '10.123,-71.456'
+            },
+            sectors: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Sector'
+              }
+            },
+            installations: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Installation'
+              }
+            }
+          }
+        },
+        Sector: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              example: 1
+            },
+            towerId: {
+              type: 'integer',
+              example: 1
+            },
+            name: {
+              type: 'string',
+              example: 'Sector A'
+            },
+            azimuth: {
+              type: 'string',
+              example: '45°'
+            },
+            installations: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Installation'
+              }
+            }
+          }
+        },
+        Fiber: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              example: 1
+            },
+            areaId: {
+              type: 'integer',
+              example: 1
+            },
+            name: {
+              type: 'string',
+              example: 'Fibra Principal'
+            },
+            description: {
+              type: 'string',
+              example: 'Fibra óptica troncal'
+            },
+            naps: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Nap'
+              }
+            },
+            vlans: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Vlan'
+              }
+            },
+            installations: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Installation'
+              }
+            }
+          }
+        },
+        Nap: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              example: 1
+            },
+            fiberId: {
+              type: 'integer',
+              example: 1
+            },
+            name: {
+              type: 'string',
+              example: 'NAP-001'
+            },
+            location: {
+              type: 'string',
+              example: '10.124,-71.457'
+            },
+            installations: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Installation'
+              }
+            }
+          }
+        },
         User: {
           type: 'object',
           properties: {
@@ -55,6 +216,116 @@ const options = {
               type: 'string',
               enum: ['admin', 'technician', 'secretary'],
               example: 'technician'
+            },
+            installations: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Installation'
+              }
+            },
+            inspections: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Inspection'
+              }
+            },
+            evidences: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Evidence'
+              }
+            }
+          }
+        },
+        Customer: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              example: 1
+            },
+            dni: {
+              type: 'string',
+              example: '12345678'
+            },
+            name: {
+              type: 'string',
+              example: 'Juan Pérez'
+            },
+            phone: {
+              type: 'string',
+              example: '+58 412-1234567'
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'juan@example.com'
+            },
+            address: {
+              type: 'string',
+              example: 'Calle Principal #123'
+            },
+            installations: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Installation'
+              }
+            }
+          }
+        },
+        DeviceIp: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              example: 1
+            },
+            installationId: {
+              type: 'integer',
+              example: 1
+            },
+            ip: {
+              type: 'string',
+              example: '192.168.1.100'
+            },
+            type: {
+              type: 'string',
+              enum: ['onu', 'router', 'other'],
+              example: 'router'
+            },
+            macAddress: {
+              type: 'string',
+              example: '00:1A:2B:3C:4D:5E'
+            },
+            description: {
+              type: 'string',
+              example: 'Router principal del cliente'
+            },
+            installation: {
+              $ref: '#/components/schemas/Installation'
+            }
+          }
+        },
+        ServiceType: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              example: 1
+            },
+            name: {
+              type: 'string',
+              example: 'Internet Fibra 50MB'
+            },
+            description: {
+              type: 'string',
+              example: 'Servicio de internet por fibra óptica de 50MB simétricos'
+            },
+            installations: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Installation'
+              }
             }
           }
         },
@@ -84,6 +355,15 @@ const options = {
             gateway: {
               type: 'string',
               example: '192.168.1.1'
+            },
+            fiber: {
+              $ref: '#/components/schemas/Fiber'
+            },
+            installations: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Installation'
+              }
             }
           }
         },
@@ -133,6 +413,21 @@ const options = {
             userId: {
               type: 'integer',
               example: 1
+            },
+            installation: {
+              $ref: '#/components/schemas/Installation'
+            },
+            inspection: {
+              $ref: '#/components/schemas/Inspection'
+            },
+            user: {
+              $ref: '#/components/schemas/User'
+            },
+            images: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/EvidenceImage'
+              }
             }
           }
         },
@@ -173,6 +468,9 @@ const options = {
             userId: {
               type: 'integer',
               example: 1
+            },
+            evidence: {
+              $ref: '#/components/schemas/Evidence'
             }
           }
         },
@@ -223,6 +521,45 @@ const options = {
               type: 'string',
               enum: ['pending', 'in_progress', 'completed', 'cancelled'],
               example: 'completed'
+            },
+            serviceType: {
+              $ref: '#/components/schemas/ServiceType'
+            },
+            area: {
+              $ref: '#/components/schemas/Area'
+            },
+            customer: {
+              $ref: '#/components/schemas/Customer'
+            },
+            fiber: {
+              $ref: '#/components/schemas/Fiber'
+            },
+            nap: {
+              $ref: '#/components/schemas/Nap'
+            },
+            tower: {
+              $ref: '#/components/schemas/Tower'
+            },
+            sector: {
+              $ref: '#/components/schemas/Sector'
+            },
+            vlan: {
+              $ref: '#/components/schemas/Vlan'
+            },
+            evidences: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Evidence'
+              }
+            },
+            inspections: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Inspection'
+              }
+            },
+            user: {
+              $ref: '#/components/schemas/User'
             }
           }
         },
@@ -254,6 +591,18 @@ const options = {
             comments: {
               type: 'string',
               example: 'Instalación verificada y funcionando correctamente'
+            },
+            installation: {
+              $ref: '#/components/schemas/Installation'
+            },
+            user: {
+              $ref: '#/components/schemas/User'
+            },
+            evidences: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Evidence'
+              }
             }
           }
         },
