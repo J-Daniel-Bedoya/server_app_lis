@@ -53,286 +53,37 @@ const options = {
             },
             role: {
               type: 'string',
-              enum: ['admin', 'technician', 'user'],
+              enum: ['admin', 'technician', 'secretary'],
               example: 'technician'
-            },
-            createdAt: {
-              type: 'string',
-              format: 'date-time'
-            },
-            updatedAt: {
-              type: 'string',
-              format: 'date-time'
             }
           }
         },
-        Area: {
+        Vlan: {
           type: 'object',
           properties: {
             id: {
               type: 'integer',
               example: 1
-            },
-            name: {
-              type: 'string',
-              example: 'Zona Norte'
-            },
-            description: {
-              type: 'string',
-              example: 'Área que cubre el sector norte de la ciudad'
-            },
-            createdAt: {
-              type: 'string',
-              format: 'date-time'
-            },
-            updatedAt: {
-              type: 'string',
-              format: 'date-time'
-            }
-          }
-        },
-        Tower: {
-          type: 'object',
-          properties: {
-            id: {
-              type: 'integer',
-              example: 1
-            },
-            name: {
-              type: 'string',
-              example: 'Torre Principal'
-            },
-            description: {
-              type: 'string',
-              example: 'Torre principal de distribución'
-            },
-            latitude: {
-              type: 'number',
-              format: 'float',
-              example: 19.4326
-            },
-            longitude: {
-              type: 'number',
-              format: 'float',
-              example: -99.1332
-            },
-            height: {
-              type: 'number',
-              format: 'float',
-              example: 30.5
-            },
-            areaId: {
-              type: 'integer',
-              example: 1
-            },
-            createdAt: {
-              type: 'string',
-              format: 'date-time'
-            },
-            updatedAt: {
-              type: 'string',
-              format: 'date-time'
-            }
-          }
-        },
-        Sector: {
-          type: 'object',
-          properties: {
-            id: {
-              type: 'integer',
-              example: 1
-            },
-            name: {
-              type: 'string',
-              example: 'Sector Norte'
-            },
-            description: {
-              type: 'string',
-              example: 'Sector que cubre la zona norte de la torre'
-            },
-            azimuth: {
-              type: 'number',
-              format: 'float',
-              example: 45.5
-            },
-            beamwidth: {
-              type: 'number',
-              format: 'float',
-              example: 120
-            },
-            frequency: {
-              type: 'string',
-              example: '5.8 GHz'
-            },
-            polarization: {
-              type: 'string',
-              enum: ['vertical', 'horizontal'],
-              example: 'vertical'
-            },
-            gain: {
-              type: 'number',
-              format: 'float',
-              example: 16
-            },
-            towerId: {
-              type: 'integer',
-              example: 1
-            },
-            createdAt: {
-              type: 'string',
-              format: 'date-time'
-            },
-            updatedAt: {
-              type: 'string',
-              format: 'date-time'
-            }
-          }
-        },
-        Fiber: {
-          type: 'object',
-          properties: {
-            id: {
-              type: 'integer',
-              example: 1
-            },
-            name: {
-              type: 'string',
-              example: 'Fibra Principal'
-            },
-            description: {
-              type: 'string',
-              example: 'Fibra principal para distribución'
-            },
-            type: {
-              type: 'string',
-              enum: ['aerial', 'underground'],
-              example: 'aerial'
-            },
-            capacity: {
-              type: 'integer',
-              example: 24
-            },
-            length: {
-              type: 'number',
-              format: 'float',
-              example: 1500.5
-            },
-            areaId: {
-              type: 'integer',
-              example: 1
-            },
-            createdAt: {
-              type: 'string',
-              format: 'date-time'
-            },
-            updatedAt: {
-              type: 'string',
-              format: 'date-time'
-            }
-          }
-        },
-        NAP: {
-          type: 'object',
-          properties: {
-            id: {
-              type: 'integer',
-              example: 1
-            },
-            name: {
-              type: 'string',
-              example: 'NAP-001'
-            },
-            description: {
-              type: 'string',
-              example: 'NAP ubicado en poste principal'
-            },
-            location: {
-              type: 'string',
-              example: 'Poste 123, Calle Principal'
-            },
-            coordinates: {
-              type: 'string',
-              example: '19.4326,-99.1332'
             },
             fiberId: {
               type: 'integer',
               example: 1
             },
-            createdAt: {
-              type: 'string',
-              format: 'date-time'
-            },
-            updatedAt: {
-              type: 'string',
-              format: 'date-time'
-            }
-          }
-        },
-        Client: {
-          type: 'object',
-          properties: {
-            id: {
-              type: 'integer',
-              example: 1
-            },
             name: {
               type: 'string',
-              example: 'Juan Pérez'
+              example: 'VLAN_101'
             },
-            address: {
+            ip: {
               type: 'string',
-              example: 'Calle Principal #123'
+              example: '192.168.1.0'
             },
-            phone: {
+            mask: {
               type: 'string',
-              example: '555-0123'
+              example: '255.255.255.0'
             },
-            email: {
+            gateway: {
               type: 'string',
-              format: 'email',
-              example: 'juan@example.com'
-            },
-            serviceType: {
-              type: 'string',
-              enum: ['antenna', 'fiber'],
-              example: 'antenna'
-            },
-            coordinates: {
-              type: 'string',
-              example: '19.4326,-99.1332'
-            },
-            antennaHeight: {
-              type: 'number',
-              format: 'float',
-              example: 10.5
-            },
-            sectorId: {
-              type: 'integer',
-              example: 1
-            },
-            technicianId: {
-              type: 'integer',
-              example: 2
-            },
-            onuIp: {
-              type: 'string',
-              example: '192.168.1.100'
-            },
-            onuMac: {
-              type: 'string',
-              example: '00:11:22:33:44:55'
-            },
-            napId: {
-              type: 'integer',
-              example: 1
-            },
-            createdAt: {
-              type: 'string',
-              format: 'date-time'
-            },
-            updatedAt: {
-              type: 'string',
-              format: 'date-time'
+              example: '192.168.1.1'
             }
           }
         },
@@ -343,46 +94,85 @@ const options = {
               type: 'integer',
               example: 1
             },
-            description: {
-              type: 'string',
-              example: 'Instalación completada exitosamente'
-            },
-            type: {
-              type: 'string',
-              enum: ['installation', 'maintenance', 'repair'],
-              example: 'installation'
-            },
-            clientId: {
+            installationId: {
               type: 'integer',
               example: 1
             },
-            images: {
-              type: 'array',
-              items: {
-                type: 'string',
-                example: 'https://storage.example.com/evidence/image1.jpg'
+            inspectionId: {
+              type: 'integer',
+              example: 1
+            },
+            type: {
+              type: 'string',
+              enum: [
+                'antenna_installation',
+                'onu_installation',
+                'signal_power',
+                'modem',
+                'device_serial',
+                'speed_test',
+                'other'
+              ],
+              example: 'antenna_installation'
+            },
+            imageUrl: {
+              type: 'string',
+              example: 'https://storage.example.com/evidence/123.jpg'
+            },
+            thumbnailUrl: {
+              type: 'string',
+              example: 'https://storage.example.com/evidence/123_thumb.jpg'
+            },
+            metadata: {
+              type: 'object',
+              example: {
+                location: '10.123,-71.456',
+                deviceInfo: 'iPhone 12'
               }
             },
-            createdAt: {
-              type: 'string',
-              format: 'date-time'
-            },
-            updatedAt: {
-              type: 'string',
-              format: 'date-time'
+            userId: {
+              type: 'integer',
+              example: 1
             }
           }
         },
-        Error: {
+        EvidenceImage: {
           type: 'object',
           properties: {
-            message: {
-              type: 'string',
-              example: 'Error message'
+            id: {
+              type: 'integer',
+              example: 1
             },
-            error: {
+            evidenceId: {
+              type: 'integer',
+              example: 1
+            },
+            imageType: {
               type: 'string',
-              example: 'Error details'
+              enum: [
+                'antenna_installation',
+                'fiber_installation',
+                'nap_connection',
+                'router_configuration',
+                'signal_test',
+                'speed_test',
+                'client_signature',
+                'inspection_evidence',
+                'other'
+              ],
+              example: 'antenna_installation'
+            },
+            imageUrl: {
+              type: 'string',
+              example: 'https://storage.example.com/evidence/123_1.jpg'
+            },
+            thumbnailUrl: {
+              type: 'string',
+              example: 'https://storage.example.com/evidence/123_1_thumb.jpg'
+            },
+            userId: {
+              type: 'integer',
+              example: 1
             }
           }
         },
@@ -393,7 +183,15 @@ const options = {
               type: 'integer',
               example: 1
             },
+            customerId: {
+              type: 'integer',
+              example: 1
+            },
             areaId: {
+              type: 'integer',
+              example: 1
+            },
+            towerId: {
               type: 'integer',
               example: 1
             },
@@ -409,50 +207,22 @@ const options = {
               type: 'integer',
               example: 1
             },
-            clientId: {
-              type: 'string',
-              example: 'CLI001'
-            },
-            clientName: {
-              type: 'string',
-              example: 'Juan Pérez'
-            },
-            phoneNumber: {
-              type: 'string',
-              example: '3001234567'
-            },
-            ipAddress: {
-              type: 'string',
-              example: '192.168.1.100'
-            },
-            macAddress: {
-              type: 'string',
-              example: '00:1A:2B:3C:4D:5E'
-            },
-            status: {
-              type: 'string',
-              enum: ['pending', 'inProgress', 'completed', 'cancelled'],
-              example: 'pending'
-            },
-            technicianId: {
+            vlanId: {
               type: 'integer',
               example: 1
             },
-            installationDate: {
-              type: 'string',
-              format: 'date-time'
+            serviceTypeId: {
+              type: 'integer',
+              example: 1
             },
-            completedAt: {
-              type: 'string',
-              format: 'date-time'
+            userId: {
+              type: 'integer',
+              example: 1
             },
-            createdAt: {
+            status: {
               type: 'string',
-              format: 'date-time'
-            },
-            updatedAt: {
-              type: 'string',
-              format: 'date-time'
+              enum: ['pending', 'in_progress', 'completed', 'cancelled'],
+              example: 'completed'
             }
           }
         },
@@ -467,41 +237,39 @@ const options = {
               type: 'integer',
               example: 1
             },
-            technicianId: {
+            userId: {
               type: 'integer',
               example: 1
             },
+            date: {
+              type: 'string',
+              format: 'date-time',
+              example: '2025-03-25T14:00:00Z'
+            },
             status: {
               type: 'string',
-              enum: ['ok', 'issues', 'critical'],
-              example: 'ok'
+              enum: ['pending', 'approved', 'rejected'],
+              example: 'approved'
             },
-            inspectionDate: {
+            comments: {
               type: 'string',
-              format: 'date-time'
-            },
-            signalStrength: {
-              type: 'number',
-              format: 'float',
-              minimum: -100,
-              maximum: 0,
-              example: -65.5
-            },
-            observations: {
+              example: 'Instalación verificada y funcionando correctamente'
+            }
+          }
+        },
+        Error: {
+          type: 'object',
+          properties: {
+            message: {
               type: 'string',
-              example: 'La señal es estable pero podría mejorarse'
+              example: 'Error message'
             },
-            nextInspectionDate: {
-              type: 'string',
-              format: 'date-time'
-            },
-            createdAt: {
-              type: 'string',
-              format: 'date-time'
-            },
-            updatedAt: {
-              type: 'string',
-              format: 'date-time'
+            error: {
+              type: 'object',
+              example: {
+                code: 'VALIDATION_ERROR',
+                details: ['Field X is required']
+              }
             }
           }
         }

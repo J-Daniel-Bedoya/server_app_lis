@@ -1,69 +1,65 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../utils/db");
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../utils/db');
 
-const Evidence = sequelize.define(
-  "evidence",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    installationId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      field: 'installation_id',
-      references: {
-        model: 'installations',
-        key: 'id'
-      }
-    },
-    inspectionId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      field: 'inspection_id',
-      references: {
-        model: 'inspections',
-        key: 'id'
-      }
-    },
-    type: {
-      type: DataTypes.ENUM('installation', 'inspection'),
-      allowNull: false
-    },
-    imageUrl: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      field: 'image_url'
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    uploadedBy: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      field: 'uploaded_by',
-      references: {
-        model: 'users',
-        key: 'id'
-      }
+const Evidence = sequelize.define('evidence', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  installationId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'installations',
+      key: 'id'
     }
   },
-  {
-    timestamps: true,
-    underscored: true,
-    validate: {
-      eitherInstallationOrInspection() {
-        if (!this.installationId && !this.inspectionId) {
-          throw new Error('Evidence must be associated with either an installation or inspection');
-        }
-        if (this.installationId && this.inspectionId) {
-          throw new Error('Evidence cannot be associated with both installation and inspection');
-        }
-      }
+  inspectionId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'inspections',
+      key: 'id'
     }
+  },
+  type: {
+    type: DataTypes.ENUM(
+      'antenna_installation',    // Foto de la antena instalada
+      'onu_installation',       // Foto de la ONT/ONU instalada
+      'signal_power',           // Foto de la señal/potencia
+      'modem',                  // Foto del modem (para antenas)
+      'device_serial',          // Foto del S/N o MAC del dispositivo
+      'speed_test',            // Foto de prueba de velocidad
+      'other'                  // Otras fotos relevantes
+    ),
+    allowNull: false
+  },
+  imageUrl: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  thumbnailUrl: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  uploadedBy: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  },
+  description: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  metadata: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    comment: 'Metadata de la imagen como coordenadas GPS, timestamp, etc.'
   }
-);
+}, {
+  timestamps: true
+});
 
 module.exports = Evidence;

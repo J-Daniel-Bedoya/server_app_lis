@@ -10,40 +10,50 @@ const Inspection = sequelize.define('inspections', {
   installationId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    field: 'installation_id'
-  },
-  technicianId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    field: 'technician_id'
+    field: 'installation_id',
+    references: {
+      model: 'installations',
+      key: 'id'
+    }
   },
   inspectionDate: {
     type: DataTypes.DATE,
     allowNull: false,
-    defaultValue: DataTypes.NOW,
-    field: 'inspection_date'
+    field: 'inspection_date',
+    defaultValue: DataTypes.NOW
   },
-  status: {
-    type: DataTypes.ENUM('ok', 'issues', 'critical'),
+  reason: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  equipmentChanged: {
+    type: DataTypes.BOOLEAN,
     allowNull: false,
-    defaultValue: 'ok'
+    field: 'equipment_changed',
+    defaultValue: false
   },
-  signalStrength: {
-    type: DataTypes.FLOAT,
-    field: 'signal_strength'
+  changedEquipmentDetails: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    field: 'changed_equipment_details'
   },
-  observations: {
-    type: DataTypes.TEXT,
+  signalPhoto: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    field: 'signal_photo',
+    comment: 'Path de la nueva foto de señal (Antena)'
+  },
+  powerPhoto: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    field: 'power_photo',
+    comment: 'Path de la nueva foto de potencia (Fibra)'
+  },
+  userId: {
+    type: DataTypes.INTEGER,
     allowNull: false,
-    field: 'observations'
-  },
-  recommendations: {
-    type: DataTypes.TEXT,
-    field: 'recommendations'
-  },
-  nextInspectionDate: {
-    type: DataTypes.DATE,
-    field: 'next_inspection_date'
+    field: 'user_id',
+    comment: 'Usuario administrador que realizó la revisión'
   }
 }, {
   timestamps: true,

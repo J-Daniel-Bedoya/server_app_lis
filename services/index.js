@@ -7,6 +7,9 @@ const evidenceService = require('./evidence.service');
 const userService = require('./users.service');
 const installationService = require('./installations.service');
 const inspectionService = require('./inspections.service');
+const serviceTypeService = require('./serviceType.service');
+const customerService = require('./customer.service');
+const deviceIpService = require('./deviceIp.service');
 
 module.exports = {
   areaService,
@@ -17,5 +20,8 @@ module.exports = {
   evidenceService,
   userService,
   installationService,
-  inspectionService
+  inspectionService,
+  serviceTypeService,
+  customerService,
+  deviceIpService
 };

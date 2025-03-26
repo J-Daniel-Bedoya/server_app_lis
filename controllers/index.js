@@ -56,6 +56,31 @@ const {
   uploadImages,
 } = require("./evidence.controller");
 
+const {
+  getAllServiceTypes,
+  getServiceTypeById,
+  createServiceType,
+  updateServiceType,
+  deleteServiceType,
+} = require("./serviceType.controller");
+
+const {
+  getAllCustomers,
+  getCustomerById,
+  createCustomer,
+  updateCustomer,
+  deleteCustomer,
+} = require("./customer.controller");
+
+const {
+  getAllDeviceIps,
+  getDeviceIpById,
+  createDeviceIp,
+  updateDeviceIp,
+  deleteDeviceIp,
+} = require("./deviceIp.controller");
+
+
 const { login, getProfile } = require("./auth.controller");
 
 module.exports = {
@@ -112,5 +137,26 @@ module.exports = {
     updateEvidence,
     deleteEvidence,
     uploadImages,
+  },
+  serviceTypeController: {
+    getAllServiceTypes,
+    getServiceTypeById,
+    createServiceType,
+    updateServiceType,
+    deleteServiceType,
+  },
+  customerController: {
+    getAllCustomers,
+    getCustomerById,
+    createCustomer,
+    updateCustomer,
+    deleteCustomer,
+  },
+  deviceIpController: {
+    getAllDeviceIps,
+    getDeviceIpById,
+    createDeviceIp,
+    updateDeviceIp,
+    deleteDeviceIp,
   },
 };

@@ -13,10 +13,6 @@ const EvidenceImage = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       field: "evidence_id",
-      references: {
-        model: 'evidence',
-        key: 'id'
-      }
     },
     imageType: {
       type: DataTypes.ENUM(
@@ -46,10 +42,6 @@ const EvidenceImage = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       field: "uploaded_by",
-      references: {
-        model: 'users',
-        key: 'id'
-      }
     },
     createdAt: {
       type: DataTypes.DATE,

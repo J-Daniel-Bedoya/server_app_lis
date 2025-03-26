@@ -1,10 +1,11 @@
-const { Fiber, Area, Nap } = require("../models");
+const { Fiber, Area, Nap, Vlan } = require("../models");
 
 class FiberService {
   async getAllFibers() {
     return Fiber.findAll({
       include: [
         { model: Area, attributes: ["id", "name"] },
+        { model: Vlan, attributes: ["id", "name"] },
         { model: Nap, attributes: ["id", "number"] },
       ],
     });
@@ -14,6 +15,7 @@ class FiberService {
     const fiber = await Fiber.findByPk(id, {
       include: [
         { model: Area, attributes: ["id", "name"] },
+        { model: Vlan, attributes: ["id", "name"] },
         { model: Nap, attributes: ["id", "number"] },
       ],
     });

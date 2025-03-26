@@ -8,6 +8,10 @@ const evidenceRoutes = require("./evidence.routes");
 const authRoutes = require("./auth.routes");
 const installationRoutes = require("./installations.routes");
 const inspectionRoutes = require("./inspections.routes");
+const serviceTypeRoutes = require("./serviceType.routes");
+const customerRoutes = require("./customer.routes");
+const deviceIpRoutes = require("./deviceIp.routes");
+const vlanRoutes = require("./vlan.routes");
 
 module.exports = {
   userRoutes,
@@ -20,4 +24,8 @@ module.exports = {
   authRoutes,
   installationRoutes,
   inspectionRoutes,
+  serviceTypeRoutes,
+  customerRoutes,
+  deviceIpRoutes,
+  vlanRoutes
 };

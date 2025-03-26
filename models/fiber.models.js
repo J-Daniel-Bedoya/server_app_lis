@@ -13,10 +13,6 @@ const Fiber = sequelize.define(
       type: DataTypes.STRING(50),
       allowNull: false,
     },
-    vlans: {
-      type: DataTypes.STRING(20),
-      allowNull: false,
-    },
     ip: {
       type: DataTypes.STRING(15),
       allowNull: false,
