@@ -1,5 +1,4 @@
-const Vlan = require('../models/vlan.models');
-const Fiber = require('../models/fiber.models');
+const {Fiber, Vlan} = require('../models');
 
 class VlanService {
   async findAll() {
