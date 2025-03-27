@@ -13,28 +13,6 @@ const Fiber = sequelize.define(
       type: DataTypes.STRING(50),
       allowNull: false,
     },
-    ip: {
-      type: DataTypes.STRING(15),
-      allowNull: false,
-      validate: {
-        isIP: true,
-      },
-    },
-    subnetMask: {
-      type: DataTypes.STRING(15),
-      allowNull: false,
-      validate: {
-        isIP: true,
-      },
-      field: "subnet_mask",
-    },
-    gateway: {
-      type: DataTypes.STRING(15),
-      allowNull: false,
-      validate: {
-        isIP: true,
-      },
-    },
     areaId: {
       type: DataTypes.INTEGER,
       allowNull: false,
