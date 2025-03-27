@@ -48,6 +48,10 @@ const initModels = (sequelize) => {
   // Relaciones de Customer
   Customer.hasMany(Installation, { foreignKey: 'customerId' });
 
+  // Relaciones de DeviceIp
+  DeviceIp.belongsTo(Installation, { foreignKey: 'installationId' });
+  Installation.hasOne(DeviceIp, { foreignKey: 'installationId' });
+
   // Relaciones de Evidence
   Evidence.hasMany(EvidenceImage, { foreignKey: 'evidenceId', as: 'images' });
   Evidence.belongsTo(Installation, { foreignKey: 'installationId', as: 'installation' });
